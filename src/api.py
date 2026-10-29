@@ -10,9 +10,9 @@ from pydantic import BaseModel, Field
 
 # Importação das funções de visão computacional (OpenCV)
 try:
-    from src.visao_computacional import inspecionar_cordao_solda, analisar_termografia_haz
+    from src.modelo_visao_comp import inspecionar_cordao_solda, analisar_termografia_haz
 except ImportError:
-    from visao_computacional import inspecionar_cordao_solda, analisar_termografia_haz
+    from modelo_visao_comp import inspecionar_cordao_solda, analisar_termografia_haz
 
 # Inicialização do FastAPI
 app = FastAPI(
