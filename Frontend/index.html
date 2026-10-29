@@ -3,167 +3,370 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VulcanTech Smart Metals S.A. | Monitoramento Inteligente Indústria 4.0</title>
+    <title>VulcanTech Smart Metals S.A. | Plataforma Industrial AI & Visão 4.0</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <header>
-        <div class="header-title">
-            <h1>VulcanTech Smart Metals S.A.</h1>
-            <p>Divisão de Estamparia, Solda Robótica e Usinagem CNC de Alta Precisão • Monitoramento 4.0</p>
+    <!-- TOPBAR EXECUTIVA ESTILO AEROMOTION-DYNAMICS -->
+    <header class="topbar">
+        <div class="brand-area">
+            <div class="brand-logo">VT</div>
+            <div>
+                <h1>VulcanTech Smart Metals S.A.</h1>
+                <p>Engenharia Preditiva, Controle em Malha Fechada (CLP) & Inspeção Óptica Avançada</p>
+            </div>
         </div>
-        <div class="api-badge">
-            <div id="apiDot" class="dot"></div>
-            <span id="apiStatusText">Checando API...</span>
+
+        <nav class="nav-tabs">
+            <button class="tab-btn active" onclick="alternarAba('aba-telemetria', this)">
+                ⚡ Telemetria, CLP & OEE
+            </button>
+            <button class="tab-btn" onclick="alternarAba('aba-visao', this)">
+                👁️ Laboratório de Visão (Comparação Lado a Lado)
+            </button>
+        </nav>
+
+        <div class="status-cluster">
+            <div class="iem-live-pill">
+                <span>IEM Instantâneo:</span>
+                <strong id="topIemVal">7.07</strong>
+            </div>
+            <div class="api-badge">
+                <div id="apiDot" class="dot"></div>
+                <span id="apiStatusText">Conectando API...</span>
+            </div>
         </div>
     </header>
 
-    <div class="grid-container">
+    <!-- ================================================================= -->
+    <!-- ABA 1: TELEMETRIA EM TEMPO REAL, DIAGNÓSTICO DE ENGENHARIA & OEE -->
+    <!-- ================================================================= -->
+    <main id="aba-telemetria" class="tab-content active">
+        <div class="dashboard-grid">
 
-        <!-- PAINEL 1: TELEMETRIA E PARÂMETROS -->
-        <div class="card">
-            <div class="card-header">
-                <span>Telemetria em Tempo Real (Chão de Fábrica)</span>
-                <span class="header-tag">Amostragem: 5 min</span>
+            <!-- COLUNA ESQUERDA: SIMULADOR DE SENSORES IOT -->
+            <section class="card telemetry-panel">
+                <div class="card-header">
+                    <div>
+                        <h2>Sensores IoT de Chão de Fábrica</h2>
+                        <span class="subtitle">Parametrização e Simulação de Anomalias Físicas</span>
+                    </div>
+                    <span class="tag-pill">Ciclo: 5 min</span>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="id_celula">Célula Flexível de Manufatura</label>
+                        <select id="id_celula" onchange="atualizarCabecalhoCelula()">
+                            <option value="CEL-201">CEL-201 • Centro Usinagem CNC 5 Eixos</option>
+                            <option value="CEL-202">CEL-202 • Prensa Hidráulica de Alta Precisão</option>
+                            <option value="CEL-203">CEL-203 • Célula Robotizada Solda MIG/MAG</option>
+                            <option value="CEL-204">CEL-204 • Célula Híbrida Aeroespacial</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="liga_metalica">Liga Metálica Processada</label>
+                        <select id="liga_metalica">
+                            <option value="Aco_Carbono_316L">Aço Inox / Carbono 316L</option>
+                            <option value="Aluminio_7075">Alumínio Aeronáutico 7075</option>
+                            <option value="Liga_Titanio_Ti6Al4V">Liga de Titânio Ti-6Al-4V (Alta Dureza)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- SENSORES COM BARRAS DE NÍVEL DINÂMICAS -->
+                <div class="sensors-grid">
+                    <div class="sensor-box">
+                        <div class="sensor-top">
+                            <label for="temperatura_fuso_c">Temperatura Fuso (°C)</label>
+                            <span class="norm-badge">Nominal: 30–75°C</span>
+                        </div>
+                        <input type="number" id="temperatura_fuso_c" value="48.0" step="0.5" oninput="atualizarBarrasSensores()">
+                        <div class="progress-track"><div id="bar_temp" class="progress-fill"></div></div>
+                    </div>
+
+                    <div class="sensor-box">
+                        <div class="sensor-top">
+                            <label for="vibracao_triaxial_rms_mms">Vibração Triaxial (mm/s)</label>
+                            <span class="norm-badge">Nominal: 0.8–3.8</span>
+                        </div>
+                        <input type="number" id="vibracao_triaxial_rms_mms" value="1.8" step="0.1" oninput="atualizarBarrasSensores()">
+                        <div class="progress-track"><div id="bar_vib" class="progress-fill"></div></div>
+                    </div>
+
+                    <div class="sensor-box">
+                        <div class="sensor-top">
+                            <label for="torque_fuso_nm">Torque no Fuso (Nm)</label>
+                            <span class="norm-badge">Nominal: 45–210</span>
+                        </div>
+                        <input type="number" id="torque_fuso_nm" value="110.0" step="1.0" oninput="atualizarBarrasSensores()">
+                        <div class="progress-track"><div id="bar_torque" class="progress-fill"></div></div>
+                    </div>
+
+                    <div class="sensor-box">
+                        <div class="sensor-top">
+                            <label for="vazao_refrigerante_lmin">Vazão Fluido (L/min)</label>
+                            <span class="norm-badge">Nominal: 15–40</span>
+                        </div>
+                        <input type="number" id="vazao_refrigerante_lmin" value="28.0" step="0.5" oninput="atualizarBarrasSensores()">
+                        <div class="progress-track"><div id="bar_vazao" class="progress-fill"></div></div>
+                    </div>
+
+                    <div class="sensor-box">
+                        <div class="sensor-top">
+                            <label for="corrente_estator_amp">Corrente Estatórica (A)</label>
+                            <span class="norm-badge">Nominal: 12–55 A</span>
+                        </div>
+                        <input type="number" id="corrente_estator_amp" value="25.0" step="0.5" oninput="atualizarBarrasSensores()">
+                        <div class="progress-track"><div id="bar_corr" class="progress-fill"></div></div>
+                    </div>
+
+                    <div class="sensor-box">
+                        <div class="sensor-top">
+                            <label for="pressao_hidraulica_bar">Pressão Hidráulica (bar)</label>
+                            <span class="norm-badge">Nominal: 110–220</span>
+                        </div>
+                        <input type="number" id="pressao_hidraulica_bar" value="160.0" step="1.0" oninput="atualizarBarrasSensores()">
+                        <div class="progress-track"><div id="bar_pressao" class="progress-fill"></div></div>
+                    </div>
+
+                    <div class="sensor-box span-2">
+                        <div class="sensor-top">
+                            <label for="nivel_ruido_db">Emissão Acústica / Ultrassônica (dB)</label>
+                            <span class="norm-badge">Nominal: 45–85 dB</span>
+                        </div>
+                        <input type="number" id="nivel_ruido_db" value="58.0" step="0.5" oninput="atualizarBarrasSensores()">
+                        <div class="progress-track"><div id="bar_ruido" class="progress-fill"></div></div>
+                    </div>
+                </div>
+
+                <div class="presets-box">
+                    <span class="preset-title">Simular Cenários Operacionais de Chão de Fábrica:</span>
+                    <div class="preset-buttons">
+                        <button type="button" class="btn-preset norm" onclick="carregarCenario(0)">0 • Operação Nominal</button>
+                        <button type="button" class="btn-preset warn" onclick="carregarCenario(1)">1 • Desgaste Fuso/Ferramenta</button>
+                        <button type="button" class="btn-preset heat" onclick="carregarCenario(2)">2 • Obstrução Refrigeração</button>
+                        <button type="button" class="btn-preset crit" onclick="carregarCenario(3)">3 • Trinca / Desalinhamento</button>
+                    </div>
+                </div>
+
+                <button type="button" class="btn-execute" onclick="executarPredicao()">
+                    🚀 Executar Inferência Preditiva & Atuar no CLP (POST /predict)
+                </button>
+            </section>
+
+            <!-- COLUNA DIREITA: DIAGNÓSTICO DE ENGENHARIA, MALHA FECHADA E OEE -->
+            <section class="card diagnostics-panel">
+                <div class="card-header">
+                    <div>
+                        <h2>Diagnóstico Prescritivo & Atuação CLP</h2>
+                        <span class="subtitle">Análise de Causa-Raiz e Plano de Manutenção Corretiva</span>
+                    </div>
+                    <span id="txtCelulaAtiva" class="cell-badge">CEL-201</span>
+                </div>
+
+                <!-- BANNER PRINCIPAL DE STATUS -->
+                <div id="statusBox" class="status-banner normal">
+                    <div class="banner-left">
+                        <span id="txtSeveridade" class="severity-pill">STATUS: NOMINAL</span>
+                        <h3 id="txtDiagnostico">0 - Operação Normal Estável</h3>
+                        <p id="txtProbabilidade">Confiança do Ensemble Random Forest: <strong>91.8%</strong></p>
+                    </div>
+                    <div class="banner-right">
+                        <span class="plc-label">COMANDO MALHA FECHADA (CLP)</span>
+                        <div id="badgeAcao" class="plc-action normal">MANTER_OPERACAO</div>
+                        <code id="txtTagClp" class="plc-tag">DB10.DBX0.0 = TRUE | Override = 100%</code>
+                    </div>
+                </div>
+
+                <!-- PAINEL DE ANÁLISE PROFUNDA DO PROBLEMA SIMULADO -->
+                <div class="engineering-analysis-grid">
+                    <div class="analysis-card">
+                        <h4>🔍 O Que Está Errado (Diagnóstico Físico)</h4>
+                        <p id="txtOQueEstaErrado">Nenhuma anomalia eletromecânica ou térmica detectada. O Índice de Esforço Mecânico (IEM) opera em regime laminar estável.</p>
+                        <div id="listaSintomas" class="symptoms-tags">
+                            <span class="symptom-tag ok">Variáveis dentro da faixa operacional</span>
+                        </div>
+                    </div>
+
+                    <div class="analysis-card">
+                        <h4>⚙️ Causa-Raiz Provável</h4>
+                        <p id="txtCausaRaiz">Célula operando com lubrificação, geometria de corte e arrefecimento balanceados para a liga metálica selecionada.</p>
+                    </div>
+
+                    <div class="analysis-card span-2 repair-box">
+                        <h4>🛠️ Como Consertar (Procedimento Prescritivo de Manutenção & CLP)</h4>
+                        <ul id="listaComoConsertar" class="repair-list">
+                            <li>Manter setpoint de avanço e rotação (100% Override) no CLP.</li>
+                            <li>Seguir cronograma padrão de manutenção preventiva e limpeza de cavacos.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- IMPACTO NO OEE COM MEDIDORES VISUAIS -->
+                <div class="oee-section">
+                    <div class="oee-header">
+                        <h3>Impacto Preditivo no OEE (Overall Equipment Effectiveness)</h3>
+                        <span class="subtitle">Cálculo dinâmico penalizando Disponibilidade, Performance e Qualidade</span>
+                    </div>
+                    <div class="oee-cards">
+                        <div class="oee-card">
+                            <span>Disponibilidade</span>
+                            <strong id="oeeDisp">95.0%</strong>
+                            <div class="oee-bar"><div id="barOeeDisp" style="width: 95%"></div></div>
+                        </div>
+                        <div class="oee-card">
+                            <span>Performance</span>
+                            <strong id="oeePerf">93.0%</strong>
+                            <div class="oee-bar"><div id="barOeePerf" style="width: 93%"></div></div>
+                        </div>
+                        <div class="oee-card">
+                            <span>Qualidade</span>
+                            <strong id="oeeQual">98.0%</strong>
+                            <div class="oee-bar"><div id="barOeeQual" style="width: 98%"></div></div>
+                        </div>
+                        <div class="oee-card total">
+                            <span>OEE Global da Célula</span>
+                            <strong id="oeeTotal">86.6%</strong>
+                            <div class="oee-bar"><div id="barOeeTotal" style="width: 86.6%"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TERMINAL DE LOGS DE ATUAÇÃO EM MALHA FECHADA -->
+                <div class="plc-terminal">
+                    <div class="terminal-header">
+                        <span>📟 Log de Eventos em Malha Fechada (Barramento Industrial / FastAPI)</span>
+                        <button type="button" class="btn-clear" onclick="limparLogTerminal()">Limpar</button>
+                    </div>
+                    <div id="terminalLog" class="terminal-body">
+                        <div>[SISTEMA] Plataforma VulcanTech 4.0 inicializada. Aguardando telemetria...</div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- ================================================================= -->
+    <!-- ABA 2: LABORATÓRIO DE VISÃO COMPUTACIONAL (COMPARAÇÃO LADO A LADO)-->
+    <!-- ================================================================= -->
+    <main id="aba-visao" class="tab-content">
+        <div class="vision-Command-Bar card">
+            <div class="vision-mode-selector">
+                <button id="btnModoSolda" class="mode-btn active" onclick="selecionarModoVisao('solda')">
+                    🔩 Inspeção Geométrica de Solda (Fundo Preto, Gradiente & Poros)
+                </button>
+                <button id="btnModoHaz" class="mode-btn" onclick="selecionarModoVisao('haz')">
+                    🔥 Análise Termográfica HAZ (Mapeamento HSV & Hotspots)
+                </button>
             </div>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="id_celula">Célula de Manufatura</label>
-                    <select id="id_celula">
-                        <option value="CEL-201">CEL-201 (CNC 5 Eixos)</option>
-                        <option value="CEL-202">CEL-202 (Prensa Hidráulica)</option>
-                        <option value="CEL-203">CEL-203 (Robô MIG/MAG)</option>
-                        <option value="CEL-204">CEL-204 (Célula Flexível)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="liga_metalica">Liga Metálica Processada</label>
-                    <select id="liga_metalica">
-                        <option value="Aco_Carbono_316L">Aço Carbono 316L</option>
-                        <option value="Aluminio_7075">Alumínio 7075</option>
-                        <option value="Liga_Titanio_Ti6Al4V">Liga Titânio Ti-6Al-4V</option>
-                    </select>
-                </div>
-            </div>
+            <div class="vision-actions">
+                <label class="upload-btn">
+                    📂 Anexar Imagem Real (Solda ou Termografia)
+                    <input type="file" id="inputImagemVisao" accept="image/*" onchange="processarUploadVisao(this)" hidden>
+                </label>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="temperatura_fuso_c">Temperatura Fuso (°C) [Norm: 30 - 75]</label>
-                    <input type="number" id="temperatura_fuso_c" value="48.0" step="0.1">
+                <div class="synthetic-generators">
+                    <span>Ou Testar com Amostras Sintéticas (Fundo Preto):</span>
+                    <button type="button" class="btn-synth ok" onclick="gerarAmostraSintetica('boa')">✨ Gerar Amostra Boa (Reta/Estável)</button>
+                    <button type="button" class="btn-synth bad" onclick="gerarAmostraSintetica('ruim')">⚠️ Gerar Amostra Ruim (Ondulada/Porosa/Hotspot)</button>
                 </div>
-                <div class="form-group">
-                    <label for="vibracao_triaxial_rms_mms">Vibração RMS (mm/s) [Norm: 0.8 - 3.8]</label>
-                    <input type="number" id="vibracao_triaxial_rms_mms" value="1.8" step="0.1">
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="torque_fuso_nm">Torque Fuso (Nm) [Norm: 45 - 210]</label>
-                    <input type="number" id="torque_fuso_nm" value="110.0" step="1.0">
-                </div>
-                <div class="form-group">
-                    <label for="vazao_refrigerante_lmin">Vazão Refrigerante (L/min) [Norm: 15 - 40]</label>
-                    <input type="number" id="vazao_refrigerante_lmin" value="28.0" step="0.5">
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="corrente_estator_amp">Corrente Estator (A) [Norm: 12 - 55]</label>
-                    <input type="number" id="corrente_estator_amp" value="25.0" step="0.5">
-                </div>
-                <div class="form-group">
-                    <label for="pressao_hidraulica_bar">Pressão Hidráulica (bar) [Norm: 110 - 220]</label>
-                    <input type="number" id="pressao_hidraulica_bar" value="160.0" step="1.0">
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group span-2">
-                    <label for="nivel_ruido_db">Nível de Ruído Acústico (dB) [Norm: 45 - 85]</label>
-                    <input type="number" id="nivel_ruido_db" value="58.0" step="0.5">
-                </div>
-            </div>
-
-            <div class="scenarios-container">
-                <label>Simular Cenários Críticos:</label>
-                <div class="btn-group">
-                    <button type="button" class="btn-scenario" onclick="carregarCenario(0)">0: Normal</button>
-                    <button type="button" class="btn-scenario" onclick="carregarCenario(1)">1: Desgaste Fuso</button>
-                    <button type="button" class="btn-scenario" onclick="carregarCenario(2)">2: Falha Refrigeração</button>
-                    <button type="button" class="btn-scenario" onclick="carregarCenario(3)">3: Desalinhamento / Trinca</button>
-                </div>
-            </div>
-
-            <div class="btn-group main-action">
-                <button type="button" class="btn-primary" onclick="executarPredicao()">Enviar Telemetria (POST /predict)</button>
             </div>
         </div>
 
-        <!-- PAINEL 2: DIAGNÓSTICO, MALHA FECHADA & OEE -->
-        <div class="card">
-            <div class="card-header">
-                <span>Diagnóstico Preditivo e Malha Fechada (CLP)</span>
-                <span id="txtCelulaAtiva" class="header-highlight">CEL-201</span>
-            </div>
-
-            <div id="statusBox" class="status-box normal">
-                <div class="status-title">Diagnóstico da Causa-Raiz</div>
-                <div id="txtDiagnostico" class="status-value">0 - Operação Normal</div>
-                <div id="txtProbabilidade" class="status-prob">Confiança: 98.5%</div>
-                <div>
-                    <span id="badgeAcao" class="action-alert normal">AÇÃO CLP: MANTER_OPERACAO</span>
+        <!-- JANELA DUPLA DE COMPARAÇÃO VISUAL LADO A LADO -->
+        <div class="vision-comparison-grid">
+            <!-- JANELA 1: IMAGEM ORIGINAL ANEXADA -->
+            <div class="card viewport-card">
+                <div class="viewport-header">
+                    <span id="lblTituloOriginal">📸 Imagem Original Capturada (Câmera Óptica / Térmica)</span>
+                    <span class="viewport-tag">RAW INPUT</span>
+                </div>
+                <div class="canvas-wrapper">
+                    <img id="imgVisaoOriginal" alt="Aguardando imagem..." style="display: none;">
+                    <div id="placeholderOriginal" class="viewport-placeholder">
+                        Anexe uma foto de cordão de solda / termografia ou clique em "Gerar Amostra Sintética" acima para visualizar a comparação lado a lado.
+                    </div>
                 </div>
             </div>
 
-            <div class="card-header sub-header">
-                <span>Impacto no Overall Equipment Effectiveness (OEE)</span>
-            </div>
-
-            <div class="oee-grid">
-                <div class="oee-metric">
-                    <span>Disponibilidade</span>
-                    <strong id="oeeDisp">95.0%</strong>
+            <!-- JANELA 2: MAPA DE DEFEITOS, GRADIENTE E GEOMETRIA -->
+            <div class="card viewport-card highlight-border">
+                <div class="viewport-header">
+                    <span id="lblTituloProcessada">🎯 Mapa de Diagnóstico (Gradiente, Geometria e Evidência de Pontos Ruins)</span>
+                    <span id="badgeStatusVisao" class="viewport-tag status-wait">AGUARDANDO</span>
                 </div>
-                <div class="oee-metric">
-                    <span>Performance</span>
-                    <strong id="oeePerf">93.0%</strong>
+                <div class="canvas-wrapper">
+                    <img id="imgVisaoProcessada" alt="Resultado do processamento..." style="display: none;">
+                    <div id="placeholderProcessada" class="viewport-placeholder">
+                        O processamento OpenCV destacará aqui o perfil geométrico, desvios de ondulação, porosidades (círculos vermelhos) e zonas sobreaquecidas (HAZ).
+                    </div>
                 </div>
-                <div class="oee-metric">
-                    <span>Qualidade</span>
-                    <strong id="oeeQual">98.0%</strong>
-                </div>
-                <div class="oee-metric oee-total-card">
-                    <span>OEE Geral</span>
-                    <strong id="oeeTotal">86.6%</strong>
-                </div>
-            </div>
-
-            <!-- PAINEL DE VISÃO COMPUTACIONAL INTEGRADA -->
-            <div class="card-header sub-header vision-header">
-                <span>Inspeção Óptica de Solda & HAZ (OpenCV)</span>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="fileWeld">Cordão de Solda (Canny / Poros)</label>
-                    <input type="file" id="fileWeld" accept="image/*" onchange="enviarInspecaoSolda(this)">
-                </div>
-                <div class="form-group">
-                    <label for="fileHaz">Termografia HAZ (HSV / Hotspots)</label>
-                    <input type="file" id="fileHaz" accept="image/*" onchange="enviarInspecaoHaz(this)">
-                </div>
-            </div>
-
-            <div id="visionOutput" class="result-pre">
-                Aguardando envio de imagens óticas ou térmicas...
             </div>
         </div>
 
-    </div>
+        <!-- MÉTRICAS GEOMÉTRICAS / TÉRMICAS E LAUDO DE CORREÇÃO DA VISÃO -->
+        <div class="vision-metrics-grid">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Métricas Extraídas por Visão Computacional</h2>
+                    <span id="txtTipoInspecao" class="tag-pill">OpenCV Engine</span>
+                </div>
+
+                <div class="metrics-Wrap">
+                    <div class="v-metric-box">
+                        <span id="lblMetrica1">Status do Lote</span>
+                        <strong id="valMetrica1">—</strong>
+                    </div>
+                    <div class="v-metric-box">
+                        <span id="lblMetrica2">Porosidades / Focos Críticos</span>
+                        <strong id="valMetrica2">—</strong>
+                    </div>
+                    <div class="v-metric-box">
+                        <span id="lblMetrica3">Variação de Largura / Área HAZ</span>
+                        <strong id="valMetrica3">—</strong>
+                    </div>
+                    <div class="v-metric-box">
+                        <span id="lblMetrica4">Desvio Linearidade (Ondulação)</span>
+                        <strong id="valMetrica4">—</strong>
+                    </div>
+                </div>
+
+                <div class="geometry-verdict-box">
+                    <span>Classificação Morfológica / Térmica:</span>
+                    <strong id="txtClassificacaoGeometria">Aguardando inspeção...</strong>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Laudo Técnico de Soldagem & Ação no Robô/CLP</h2>
+                    <span id="badgeAcaoVisao" class="tag-pill">AÇÃO CLP</span>
+                </div>
+
+                <div class="vision-report-details">
+                    <div class="report-item">
+                        <strong>Diagnóstico dos Pontos Evidenciados:</strong>
+                        <p id="txtVisaoDiagnostico">Envie uma imagem para gerar a avaliação geométrica e termográfica detalhada.</p>
+                    </div>
+                    <div class="report-item">
+                        <strong>Causa-Raiz Identificada:</strong>
+                        <p id="txtVisaoCausa">—</p>
+                    </div>
+                    <div class="report-item">
+                        <strong>Plano de Correção Recomendado:</strong>
+                        <pre id="txtVisaoCorrecao" class="pre-correcao">—</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Canvas oculto auxiliar para geração de imagens de teste sintéticas -->
+    <canvas id="canvasSintetico" width="640" height="360" style="display: none;"></canvas>
 
     <script src="script.js"></script>
 </body>
