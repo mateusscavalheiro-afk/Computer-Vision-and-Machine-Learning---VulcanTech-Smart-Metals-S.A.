@@ -1,0 +1,24 @@
+# Manipulação e Análise de Séries Temporais (Etapa 1)
+numpy>=1.24.0
+pandas>=2.0.0
+scipy>=1.10.0
+
+# Visualização de Dados e Relatórios (Etapa 1 e 2)
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Machine Learning, Balanceamento e MLOps (Etapa 2)
+scikit-learn>=1.2.0
+imbalanced-learn>=0.10.0
+joblib>=1.2.0
+
+# Visão Computacional Multimodal (Etapa 3)
+# Utiliza opencv-python-headless para ambientes de servidor, CI/CD e Docker sem interface GUI nativa
+opencv-python-headless>=4.8.0.76
+
+# Microsserviço, API RESTful e Comunicação (Etapa 3)
+fastapi>=0.100.0
+uvicorn[standard]>=0.22.0
+pydantic>=2.0.0
+requests>=2.31.0
+python-multipart>=0.0.6
