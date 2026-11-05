@@ -13,7 +13,6 @@ imbalanced-learn>=0.10.0
 joblib>=1.2.0
 
 # Visão Computacional Multimodal (Etapa 3)
-# Utiliza opencv-python-headless para ambientes de servidor, CI/CD e Docker sem interface GUI nativa
 opencv-python-headless>=4.8.0.76
 
 # Microsserviço, API RESTful e Comunicação (Etapa 3)
